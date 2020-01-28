@@ -1,10 +1,5 @@
 package nate;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,7 +7,7 @@ public class App {
     static Scanner in = new Scanner(System.in);
 
     public static void main(String[] args) {
-        ArrayList<CookieOrder> orders = loadOrders();
+        ArrayList<CookieOrder> orders = Util.loadOrders();
 
         CookieOrder order = startOrder();
 
@@ -34,7 +29,7 @@ public class App {
 
         displayReceipt(order);
 
-        saveOrders(orders);
+        Util.saveOrders(orders);
     }
 
     private static void displayReceipt(CookieOrder order) {
@@ -48,17 +43,6 @@ public class App {
             if (entry.getValue() > 0) {
                 System.out.println(" - " + entry.getKey() + ": " + entry.getValue());
             }
-        }
-    }
-
-    private static void saveOrders(ArrayList<CookieOrder> orders) {
-        try {
-            FileOutputStream fileStream = new FileOutputStream("orders.ser");
-            ObjectOutputStream os = new ObjectOutputStream(fileStream);
-            os.writeObject(orders);
-            os.close();
-        } catch (IOException ex) {
-            System.out.println("Failed to save orders.");
         }
     }
 
@@ -105,17 +89,5 @@ public class App {
         System.out.print("Phone or Email: ");
         String phoneOrEmail = in.nextLine();
         return new CookieOrder(lastName, address, phoneOrEmail);
-    }
-
-    public static ArrayList<CookieOrder> loadOrders() {
-        try {
-            FileInputStream fileStream = new FileInputStream("orders.ser");
-            ObjectInputStream os = new ObjectInputStream(fileStream);
-            ArrayList<CookieOrder> orders = (ArrayList<CookieOrder>) os.readObject();
-            os.close();
-            return orders;
-        } catch (IOException | ClassNotFoundException ex) {
-            return new ArrayList<CookieOrder>();
-        }
     }
 }
