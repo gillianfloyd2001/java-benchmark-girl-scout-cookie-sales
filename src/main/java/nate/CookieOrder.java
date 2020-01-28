@@ -9,6 +9,7 @@ public class CookieOrder implements Serializable {
     String address;
     String phoneOrEmail;
     HashMap<CookieType, Integer> quantities;
+    Boolean paid = false;
 
     public CookieOrder(String lastName, String address, String phoneOrEmail) {
         this.lastName = lastName;
