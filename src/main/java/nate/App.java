@@ -18,13 +18,13 @@ public class App {
 
         System.out.println("Hey You. Here are the cookies. ($5 a box)");
         while (true) {
-            String choice = getCookieChoice();
+            CookieType choice = getCookieChoice();
             if (choice == null) {
                 break;
             }
             Integer quantity = getQuantityChoice();
 
-            updateOrder(order, choice, quantity);
+            order.quantities.put(choice, quantity);
         }
 
         System.out.print("Total: $");
@@ -44,33 +44,10 @@ public class App {
         System.out.println("Address: " + order.address);
         System.out.println("Phone Or Email: " + order.phoneOrEmail);
         System.out.println("Boxes:");
-
-        if (order.numberDonated > 0) {
-            System.out.println(" - Donated: " + order.numberDonated);
-        }
-        if (order.numberThanksALot > 0) {
-            System.out.println(" - Thanks-A-Lot: " + order.numberThanksALot);
-        }
-        if (order.numberSmores > 0) {
-            System.out.println(" - Girl Scout S'Mores: " + order.numberSmores);
-        }
-        if (order.numberLemonades > 0) {
-            System.out.println(" - Lemonades: " + order.numberLemonades);
-        }
-        if (order.numberShortbreads > 0) {
-            System.out.println(" - Shortbread: " + order.numberShortbreads);
-        }
-        if (order.numberThinMints > 0) {
-            System.out.println(" - Thin Mints: " + order.numberThinMints);
-        }
-        if (order.numberPeanutButterPatties > 0) {
-            System.out.println(" - Peanut Butter Patties: " + order.numberPeanutButterPatties);
-        }
-        if (order.numberCaramelDeLites > 0) {
-            System.out.println(" - Caramel deLites: " + order.numberCaramelDeLites);
-        }
-        if (order.numberPeanutButterSandwich > 0) {
-            System.out.println(" - Peanut Butter Sandwiches: " + order.numberPeanutButterSandwich);
+        for (var entry : order.quantities.entrySet()) {
+            if (entry.getValue() > 0) {
+                System.out.println(" - " + entry.getKey() + ": " + entry.getValue());
+            }
         }
     }
 
@@ -82,30 +59,6 @@ public class App {
             os.close();
         } catch (IOException ex) {
             System.out.println("Failed to save orders.");
-        }
-    }
-
-    private static void updateOrder(CookieOrder order, String choice, Integer quantity) {
-        if (choice.equals("1")) {
-            order.numberDonated += quantity;
-        } else if (choice.equals("2")) {
-            order.numberThanksALot += quantity;
-        } else if (choice.equals("3")) {
-            order.numberSmores += quantity;
-        } else if (choice.equals("4")) {
-            order.numberLemonades += quantity;
-        } else if (choice.equals("5")) {
-            order.numberShortbreads += quantity;
-        } else if (choice.equals("6")) {
-            order.numberThinMints += quantity;
-        } else if (choice.equals("7")) {
-            order.numberPeanutButterPatties += quantity;
-        } else if (choice.equals("8")) {
-            order.numberCaramelDeLites += quantity;
-        } else if (choice.equals("9")) {
-            order.numberPeanutButterSandwich += quantity;
-        } else {
-            System.out.println("Swing and a miss. That isn't a choice.");
         }
     }
 
@@ -123,28 +76,23 @@ public class App {
         }
     }
 
-    private static String getCookieChoice() {
+    private static CookieType getCookieChoice() {
         while (true) {
-            System.out.println(" 1. Donate a box (costs you 5 bucks, and no cookies) how nice");
-            System.out.println(" 2. Thanks-A-Lot");
-            System.out.println(" 3. Girl-Scout S'mores");
-            System.out.println(" 4. Lemonades");
-            System.out.println(" 5. Shortbread");
-            System.out.println(" 6. Thin Mints");
-            System.out.println(" 7. Peanut Butter Patties");
-            System.out.println(" 8. Caramel deLites");
-            System.out.println(" 9. Peanut Butter Sandwich");
+            for (int i = 0; i < CookieType.values().length; i++) {
+                System.out.println(" " + (i + 1) + ". " + CookieType.values()[i]);
+            }
             System.out.println(" Q. quit");
             System.out.print(">>> ");
             String choice = in.nextLine();
             if (choice.equalsIgnoreCase("q")) {
                 return null;
-            } else if (choice.equals("1") || choice.equals("2") || choice.equals("3") || choice.equals("4")
-                    || choice.equals("5") || choice.equals("6") || choice.equals("7") || choice.equals("8")
-                    || choice.equals("9")) {
-                return choice;
             } else {
-                System.out.println("Invalid choice");
+                try {
+                    Integer index = Integer.parseInt(choice);
+                    return CookieType.values()[index];
+                } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                    System.out.println("Invalid choice");
+                }
             }
         }
     }
